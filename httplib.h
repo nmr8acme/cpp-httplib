@@ -794,6 +794,7 @@ private:
 enum class Error {
   Success = 0,
   Unknown,
+  EmptyPath,
   Connection,
   BindIPAddress,
   Read,
@@ -1590,6 +1591,7 @@ Server::set_idle_interval(const std::chrono::duration<Rep, Period> &duration) {
 inline std::string to_string(const Error error) {
   switch (error) {
   case Error::Success: return "Success";
+  case Error::EmptyPath: return "EmptyPath";
   case Error::Connection: return "Connection";
   case Error::BindIPAddress: return "BindIPAddress";
   case Error::Read: return "Read";
@@ -6034,7 +6036,7 @@ inline bool ClientImpl::handle_request(Stream &strm, Request &req,
                                        Response &res, bool close_connection,
                                        Error &error) {
   if (req.path.empty()) {
-    error = Error::Connection;
+    error = Error::EmptyPath;
     return false;
   }
 
